@@ -33,6 +33,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 @Composable
 fun AppUI(model: FreezerModel) {
     with(model) {
+        loadDeezerAsync()
         MaterialTheme(
             colors = lightColors(
                 primary = Color(142, 183, 171),
@@ -42,11 +43,10 @@ fun AppUI(model: FreezerModel) {
             )
         ) {
 
-            Scaffold(topBar = { TopBar(this) },
-                content = { Body(this) },
-                bottomBar = { BottomBar(this) })
+            Scaffold(topBar = { TopBar(model) },
+                content = { Body(model) },
+                bottomBar = { BottomBar(model) })
         }
-
 
     }
 }
@@ -62,6 +62,13 @@ fun Body(model: FreezerModel) {
                 setupPlayer(model)
             }
         }
+    }
+}
+
+@Composable
+fun setupRadio(model: FreezerModel){
+    with(model){
+        model.radio
     }
 }
 
@@ -192,10 +199,4 @@ fun setupPlayer(model: FreezerModel) {
                 }
             }
         }
-    }
-
-    @Preview
-    @Composable
-    fun Preview() {
-        AppUI(FreezerModel)
     }
