@@ -2,15 +2,14 @@ package fhnw.emoba.freezerapp.data
 
 import org.json.JSONObject
 
-data class Track (
-    val id: Int,
-    val title: String,
+class Track (json: JSONObject)
 
-        ){
-    constructor(json: JSONObject): this(
-        id = json.getInt("id"),
-        title = json.getString("title")
-    )
+{
+       val id = json.getInt("id")
+       val title = json.getString("title")
+       val preview = json.getString("preview")
+       val album = json.getJSONObject("album")
+
 
     override fun toString(): String {
         return "Song(id=$id, title='$title')"
