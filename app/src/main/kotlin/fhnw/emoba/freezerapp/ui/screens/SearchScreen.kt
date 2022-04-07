@@ -1,64 +1,105 @@
 package fhnw.emoba.freezerapp.ui.screens
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import android.view.KeyEvent.KEYCODE_ENTER
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import fhnw.emoba.freezerapp.data.Track
+import fhnw.emoba.freezerapp.model.AvailableScreen
 import fhnw.emoba.freezerapp.model.FreezerModel
-
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun search(model: FreezerModel) {
     with(model) {
-        ConstraintLayout(
-            Modifier
-                .fillMaxSize()
-                .padding(20.dp)
-        )
-        {
-            val (link, searchField) = createRefs()
-            OutlinedTextField(
-                value = searchWord,
+
+            val keyboard = LocalSoftwareKeyboardController.current
+
+        Column(Modifier.padding(10.dp)) {
+            OutlinedTextField(value         = searchWord,
                 onValueChange = { searchWord = it },
-                placeholder = { Text("Search") },
-                modifier = Modifier.constrainAs(searchField) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(link.bottom, 20.dp)
-                    width = Dimension.fillToConstraints
-                },
-                trailingIcon = {
+                singleLine    = true,
+                trailingIcon  = {
                     IconButton(onClick = {
+                        keyboard?.hide()
                         searchWord = ""
-                    }) { Icon(Icons.Filled.Clear, "") }
+                        launchSearch()})
+                    {
+                        Icon(Icons.Filled.Clear, "löschen")
+                    }
                 },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                    autoCorrect = false,
-                    keyboardType = KeyboardType.Ascii
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    // keyboard?.hide()
-                    //model.loadFlag()
-                })
-            )
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = { keyboard?.hide()
+                    launchSearch() }),
+                colors          = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = MaterialTheme.colors.secondary),
+                placeholder     = { Text("Suche") },
+                modifier        = Modifier
+                    .fillMaxWidth()
+                    // das ist eigentlich nur fuer den Emulator interessant. Auf einem Smartphone wird kaum ein "Enter" eingegeben
+                    .onKeyEvent {
+                        if (it.nativeKeyEvent.keyCode == KEYCODE_ENTER) {
+                            searchWord = searchWord.replace("\n", "", ignoreCase = true)
+                            launchSearch()
+                        }
+                        false
+                    })
+            switches(model)
+            showResults(model)
         }
     }
 }
+
+
+
+@Composable
+fun switches(model: FreezerModel) {
+    with(model) {
+        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly) {
+
+            Text("Track")
+            Switch(checked = rememberTrack.value, onCheckedChange = { rememberTrack.value = it })
+
+            Text("Album")
+            Switch(checked = rememberAlb.value, onCheckedChange = { rememberAlb.value = it })
+
+
+
+        }
+    }
+}
+
+@Composable
+fun showResults(model: FreezerModel) {
+    val state = rememberLazyListState()
+    with(model) {
+        LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
+            items(resultTrackList) {
+                TrackView(it, model)
+            }
+        }
+    }
+}
+

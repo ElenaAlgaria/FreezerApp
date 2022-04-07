@@ -12,7 +12,7 @@ object FreezerApp : EmobaApp {
     private lateinit var model: FreezerModel
 
     override fun initialize(activity: ComponentActivity) {
-        val ser = DeezerService()
+        val ser = DeezerService(activity)
         model = FreezerModel(ser)
         model.loadDeezerAsync()
 

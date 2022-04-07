@@ -9,6 +9,8 @@ class Track (json: JSONObject)
        val title = json.getString("title")
        val preview = json.getString("preview")
        val album = json.getJSONObject("album")
+       var fav = false
+       val artist = json.getJSONObject("artist")
 
 
     override fun toString(): String {
