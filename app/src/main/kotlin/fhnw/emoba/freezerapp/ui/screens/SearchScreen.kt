@@ -11,22 +11,17 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
-import fhnw.emoba.freezerapp.data.Track
+import androidx.compose.ui.unit.sp
+import fhnw.emoba.freezerapp.data.AlbumWithArtist
 import fhnw.emoba.freezerapp.model.AvailableScreen
 import fhnw.emoba.freezerapp.model.FreezerModel
 
@@ -80,12 +75,10 @@ fun switches(model: FreezerModel) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly) {
 
             Text("Track")
-            Switch(checked = rememberTrack.value, onCheckedChange = { rememberTrack.value = it })
+            Switch(checked = rememberTrack, onCheckedChange = { toggleTrack() })
 
             Text("Album")
-            Switch(checked = rememberAlb.value, onCheckedChange = { rememberAlb.value = it })
-
-
+            Switch(checked = rememberAlbum, onCheckedChange = { toggleAlbum() })
 
         }
     }
@@ -95,9 +88,48 @@ fun switches(model: FreezerModel) {
 fun showResults(model: FreezerModel) {
     val state = rememberLazyListState()
     with(model) {
-        LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
-            items(resultTrackList) {
-                TrackView(it, model)
+        if (rememberTrack){
+            LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
+                items(resultTrackList) {
+                    TrackView(it, model)
+                }
+        }
+        }
+        if (rememberAlbum){
+            LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
+                items(resultAlbumList) {
+                    AlbumView(it, model)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun AlbumView(it: AlbumWithArtist, model: FreezerModel) {
+    with(model) {
+        Card(shape = RoundedCornerShape(20.dp), elevation = 10.dp, modifier = Modifier
+            .padding(10.dp)
+            .fillMaxWidth(),
+            onClick = {
+               loadTracks(it.tracks)
+                currentScreen = AvailableScreen.TRACK
+            }) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(text = it.title, modifier = Modifier
+                        .padding(10.dp)
+                        .align(Alignment.CenterVertically), fontSize = 14.sp)
+                    Spacer(Modifier.width(20.dp))
+
+                }
+                Text(text = loadArtist(it.artist), modifier = Modifier
+                    .padding(10.dp)
+                    .align(
+                        Alignment.Start
+                    ), fontSize = 13.sp, color = Color.DarkGray)
             }
         }
     }

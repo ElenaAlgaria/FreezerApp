@@ -14,7 +14,7 @@ object FreezerApp : EmobaApp {
     override fun initialize(activity: ComponentActivity) {
         val ser = DeezerService(activity)
         model = FreezerModel(ser)
-        model.loadDeezerAsync()
+        model.loadRadio()
 
     }
 

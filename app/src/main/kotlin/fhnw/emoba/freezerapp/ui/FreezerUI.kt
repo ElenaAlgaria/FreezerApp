@@ -16,10 +16,7 @@ import androidx.compose.ui.unit.dp
 import fhnw.emoba.R
 import fhnw.emoba.freezerapp.model.AvailableScreen
 import fhnw.emoba.freezerapp.model.FreezerModel
-import fhnw.emoba.freezerapp.ui.screens.SetupRadio
-import fhnw.emoba.freezerapp.ui.screens.search
-import fhnw.emoba.freezerapp.ui.screens.setupPlayer
-import fhnw.emoba.freezerapp.ui.screens.showTracks
+import fhnw.emoba.freezerapp.ui.screens.*
 
 
 @Composable
@@ -77,8 +74,11 @@ fun Body(model: FreezerModel) {
                     AvailableScreen.EXPLORE -> {
                         SetupRadio(model = model)
                     }
-                    AvailableScreen.TRACK -> {
-                        showTracks(model = model)
+                    AvailableScreen.TRACK ->  {
+                        showTracks(model = model, tracks = trackList)
+                    }
+                    AvailableScreen.FAV -> {
+                        showFavorites(model = model)
                     }
                 }
             }

@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 
 class FreezerModel(val ser: DeezerService) {
@@ -20,7 +21,6 @@ class FreezerModel(val ser: DeezerService) {
     var trackName = ""
     var album: Album? = null
     var artist: Artist? = null
-    var isFavorite by mutableStateOf(false)
 
     var currentScreen by mutableStateOf(AvailableScreen.EXPLORE)
     var searchWord by mutableStateOf("")
@@ -28,16 +28,18 @@ class FreezerModel(val ser: DeezerService) {
 
     var isLoading by mutableStateOf(false)
     var radioList: List<Radio> by mutableStateOf(emptyList())
-    var trackRadioList: List<Track> by mutableStateOf(emptyList())
+    var trackList: List<Track> by mutableStateOf(emptyList())
     var tracksFavorites = mutableListOf<Track>()
 
     var resultTrackList: List<Track> by mutableStateOf(emptyList())
-    var resultAlbumList: List<Album> by mutableStateOf(emptyList())
+    var resultAlbumList: List<AlbumWithArtist> by mutableStateOf(emptyList())
 
-    val rememberTrack = mutableStateOf(true)
-    val rememberAlb = mutableStateOf(false)
+    var rememberTrack by mutableStateOf(true)
+    var rememberAlbum by mutableStateOf(false)
+
 
 /*
+random album hole
     var favoriteRadios: List<Radio> by mutableStateOf(
         listOf(
             repo.getRadio(37151)
@@ -45,25 +47,32 @@ class FreezerModel(val ser: DeezerService) {
     )
 
  */
+    fun toggleTrack(){
+        rememberTrack = !rememberTrack
+        rememberAlbum = true
+    }
+
+    fun toggleAlbum(){
+        rememberAlbum = !rememberAlbum
+        rememberTrack = true
+
+    }
 
     fun launchSearch() {
         modelScope.launch {
-            if (rememberTrack.value) {
-                rememberAlb.value = false
+            if (rememberTrack) {
                 val results = ser.requestSearchTrack(searchWord)
                 resultTrackList = results
+            }
+            if (rememberAlbum){
 
-            } else if (rememberAlb.value) {
-                rememberTrack.value = false
                 val results = ser.requestSearchAlbum(searchWord)
                 resultAlbumList = results
-
             }
-            searchWord = ""
         }
     }
 
-    fun loadDeezerAsync() {
+    fun loadRadio() {
         isLoading = true
         radioList = emptyList()
         modelScope.launch {
@@ -80,24 +89,11 @@ class FreezerModel(val ser: DeezerService) {
         }
     }
 
-    fun loadRadioTracks(tracks: String) {
+    fun loadTracks(tracks: String) {
         modelScope.launch {
-            val tracksResult = ser.getRadioTracks(tracks)
-            trackRadioList = tracksResult
+            val tracksResult = ser.getTracks(tracks)
+            trackList = tracksResult
         }
-    }
-
-
-    private val player = MediaPlayer().apply {
-        setAudioAttributes(
-            AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .build()
-        )
-        setOnPreparedListener {
-            start()
-        }
-        setOnCompletionListener { playerIsReady = true }
     }
 
     fun loadAlbumCover(albumObject: JSONObject) {
@@ -110,32 +106,37 @@ class FreezerModel(val ser: DeezerService) {
     }
 
     fun loadArtist(artistObject: JSONObject): String {
-
         val art = Artist(artistObject)
         artist = art
-
         return artist!!.name
     }
 
-    fun setTrack(preview: String, trackName: String, albumObject: JSONObject) {
+    fun setTrack(preview: String, trackName: String, albumObject: JSONObject, artistObject: JSONObject) {
         this.preview = preview
         this.trackName = trackName
-
-        // val album = ALbum(song.album as JSONObject) -> album.cover mache
-
         loadAlbumCover(albumObject)
+        loadArtist(artistObject)
         startPlayer()
-
     }
 
     fun switchFavorite(track: Track) {
-        if (!isFavorite) {
-            isFavorite = true
+        if (!tracksFavorites.contains(track)) {
             tracksFavorites.add(track)
         } else {
-            isFavorite = false
             tracksFavorites.remove(track)
         }
+    }
+
+    private val player = MediaPlayer().apply {
+        setAudioAttributes(
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build()
+        )
+        setOnPreparedListener {
+            start()
+        }
+        setOnCompletionListener { playerIsReady = true }
     }
 
     fun startPlayer() {

@@ -19,7 +19,7 @@ class DeezerService(activity: ComponentActivity) {
     val allRadios = mutableListOf<Radio>()
     val context = activity
     val allTracks = mutableListOf<Track>()
-    val allAlben = mutableListOf<Album>()
+    val allAlben = mutableListOf<AlbumWithArtist>()
 
 
     fun getData(url: URL): JSONArray {
@@ -67,13 +67,13 @@ class DeezerService(activity: ComponentActivity) {
         return allTracks
     }
 
-    fun requestSearchAlbum(word: String): List<Album>{
+    fun requestSearchAlbum(word: String): List<AlbumWithArtist>{
         val url = URL("$baseURL/search/album?q=$word")
         var data = getData(url)
 
         for (i in 0 until data.length()){
             val json = data.get(i)
-            allAlben.add(Album(json as JSONObject))
+            allAlben.add(AlbumWithArtist(json as JSONObject))
         }
         return allAlben
     }
@@ -95,16 +95,16 @@ class DeezerService(activity: ComponentActivity) {
 
     }
 
-    fun getRadioTracks(trackList: String): List<Track> {
+    fun getTracks(trackList: String): List<Track> {
         val url = URL(trackList)
         var data = getData(url)
-        val allTracksRadio = mutableListOf<Track>()
+        val allTracks = mutableListOf<Track>()
 
         for (i in 0 until data.length()) {
             val json = data.get(i)
-            allTracksRadio.add(Track(json as JSONObject))
+            allTracks.add(Track(json as JSONObject))
         }
-        return allTracksRadio
+        return allTracks
     }
 
     fun getImageFromRadio(url: String): ImageBitmap {

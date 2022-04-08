@@ -22,12 +22,12 @@ import fhnw.emoba.freezerapp.model.AvailableScreen
 import fhnw.emoba.freezerapp.model.FreezerModel
 
 @Composable
-fun showTracks(model: FreezerModel) {
+fun showTracks(tracks: List<Track>, model: FreezerModel) {
     val state = rememberLazyListState()
 
     with(model) {
         LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
-            items(trackRadioList) {
+            items(tracks) {
                 TrackView(it, model)
             }
         }
@@ -42,7 +42,7 @@ fun TrackView(it: Track, model: FreezerModel) {
             .padding(10.dp)
             .fillMaxWidth(),
             onClick = {
-                setTrack(it.preview, it.title, it.album)
+                setTrack(it.preview, it.title, it.album, it.artist)
                 currentScreen = AvailableScreen.PLAYER
             }) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -52,16 +52,14 @@ fun TrackView(it: Track, model: FreezerModel) {
                     .padding(10.dp)
                     .align(Alignment.CenterVertically), fontSize = 14.sp)
                 Spacer(Modifier.width(20.dp))
-                if (!it.fav){
-                    IconButton( onClick = {
-                    it.fav = true}) {
+                if (!tracksFavorites.contains(it)){
+                    IconButton( onClick = {switchFavorite(it)}) {
                         Icon(
                             imageVector = Icons.Filled.FavoriteBorder, contentDescription = "favBorder"
                         )
                     }
                 } else {
-                    IconButton(onClick = {
-                    it.fav = false}) {
+                    IconButton(onClick = {switchFavorite(it)}) {
                         Icon(
                             imageVector = Icons.Filled.Favorite, contentDescription = "fav",
 
