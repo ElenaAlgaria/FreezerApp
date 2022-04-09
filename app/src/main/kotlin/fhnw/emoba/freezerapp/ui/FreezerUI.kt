@@ -76,7 +76,9 @@ fun Body(model: FreezerModel) {
                     }
                     AvailableScreen.TRACK ->  {
                         showTracks(model = model, tracks = trackList)
+                        showAlbumTracks(tracks = trackAlbumList, model = model)
                     }
+
                     AvailableScreen.FAV -> {
                         showFavorites(model = model)
                     }
@@ -85,6 +87,8 @@ fun Body(model: FreezerModel) {
         }
     }
 }
+
+
 
 @Composable
 fun BottomBar(model: FreezerModel) {

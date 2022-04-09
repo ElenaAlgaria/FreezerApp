@@ -1,5 +1,6 @@
 package fhnw.emoba.freezerapp.data
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.graphics.ImageBitmap
@@ -13,6 +14,11 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 import javax.net.ssl.HttpsURLConnection
 
+val DEFAULT_ICON = Bitmap.createBitmap(
+    120,
+    120,
+    Bitmap.Config.ALPHA_8
+).asImageBitmap()
 
 class DeezerService(activity: ComponentActivity) {
     val baseURL = "https://api.deezer.com"
@@ -20,6 +26,7 @@ class DeezerService(activity: ComponentActivity) {
     val context = activity
     val allTracks = mutableListOf<Track>()
     val allAlben = mutableListOf<AlbumWithArtist>()
+
 
 
     fun getData(url: URL): JSONArray {
@@ -91,9 +98,6 @@ class DeezerService(activity: ComponentActivity) {
         return allRadios
     }
 
-    fun requestArtistOfTrack(artist: Artist){
-
-    }
 
     fun getTracks(trackList: String): List<Track> {
         val url = URL(trackList)
@@ -103,6 +107,18 @@ class DeezerService(activity: ComponentActivity) {
         for (i in 0 until data.length()) {
             val json = data.get(i)
             allTracks.add(Track(json as JSONObject))
+        }
+        return allTracks
+    }
+
+    fun getTracksWithoutAlbum(trackList: String): List<TracksNoAlbum> {
+        val url = URL(trackList)
+        var data = getData(url)
+        val allTracks = mutableListOf<TracksNoAlbum>()
+
+        for (i in 0 until data.length()) {
+            val json = data.get(i)
+            allTracks.add(TracksNoAlbum(json as JSONObject))
         }
         return allTracks
     }

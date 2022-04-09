@@ -10,7 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.json.JSONArray
 import org.json.JSONObject
 
 class FreezerModel(val ser: DeezerService) {
@@ -29,6 +28,8 @@ class FreezerModel(val ser: DeezerService) {
     var isLoading by mutableStateOf(false)
     var radioList: List<Radio> by mutableStateOf(emptyList())
     var trackList: List<Track> by mutableStateOf(emptyList())
+    var trackAlbumList: List<TracksNoAlbum> by mutableStateOf(emptyList())
+
     var tracksFavorites = mutableListOf<Track>()
 
     var resultTrackList: List<Track> by mutableStateOf(emptyList())
@@ -37,22 +38,14 @@ class FreezerModel(val ser: DeezerService) {
     var rememberTrack by mutableStateOf(true)
     var rememberAlbum by mutableStateOf(false)
 
+    var index = 0
 
-/*
-random album hole
-    var favoriteRadios: List<Radio> by mutableStateOf(
-        listOf(
-            repo.getRadio(37151)
-        )
-    )
-
- */
-    fun toggleTrack(){
+    fun toggleTrack() {
         rememberTrack = !rememberTrack
         rememberAlbum = true
     }
 
-    fun toggleAlbum(){
+    fun toggleAlbum() {
         rememberAlbum = !rememberAlbum
         rememberTrack = true
 
@@ -64,7 +57,7 @@ random album hole
                 val results = ser.requestSearchTrack(searchWord)
                 resultTrackList = results
             }
-            if (rememberAlbum){
+            if (rememberAlbum) {
 
                 val results = ser.requestSearchAlbum(searchWord)
                 resultAlbumList = results
@@ -93,6 +86,18 @@ random album hole
         modelScope.launch {
             val tracksResult = ser.getTracks(tracks)
             trackList = tracksResult
+
+           for (i in 0 until trackList.size){
+               loadAlbumCover(trackList.get(i).album as JSONObject)
+           }
+        }
+    }
+
+    fun loadTracksNoAlbum(tracks: String) {
+        modelScope.launch {
+            val tracksResult = ser.getTracksWithoutAlbum(tracks)
+            trackAlbumList = tracksResult
+
         }
     }
 
@@ -111,10 +116,23 @@ random album hole
         return artist!!.name
     }
 
-    fun setTrack(preview: String, trackName: String, albumObject: JSONObject, artistObject: JSONObject) {
+    fun setTrack(
+        index: Int,
+        preview: String,
+        trackName: String,
+        artistObject: JSONObject
+    ) {
         this.preview = preview
         this.trackName = trackName
-        loadAlbumCover(albumObject)
+        this.index = index
+        loadArtist(artistObject)
+        startPlayer()
+    }
+
+    fun setAlbumTrack(index: Int, preview: String, trackName: String, artistObject: JSONObject) {
+        this.preview = preview
+        this.trackName = trackName
+        this.index = index
         loadArtist(artistObject)
         startPlayer()
     }
@@ -155,5 +173,20 @@ random album hole
         player.pause()
         playerIsReady = true
     }
+
+    fun fromStart() {
+        player.seekTo(0)
+        player.start()
+        playerIsReady = false
+    }
+
+    fun nextTrack() {
+        player.pause()
+        var next = trackList.get(++index)
+        setTrack(index, next.preview, next.title,next.artist)
+        startPlayer()
+        currentScreen = AvailableScreen.PLAYER
+    }
+
 }
 

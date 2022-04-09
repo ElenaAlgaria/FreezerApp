@@ -1,8 +1,5 @@
 package fhnw.emoba.freezerapp.ui.screens
 
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,32 +10,31 @@ import fhnw.emoba.freezerapp.data.Radio
 import fhnw.emoba.freezerapp.model.FreezerModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.*
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import fhnw.emoba.freezerapp.model.AvailableScreen
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun SetupRadio(model: FreezerModel) {
     val state = rememberLazyListState()
 
     with(model) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp, 16.dp, 0.dp, 16.dp),
-            contentAlignment = Alignment.Center
+                .padding(16.dp, 16.dp, 16.dp, 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Radios", modifier = Modifier.align(Alignment.TopStart), fontWeight = FontWeight.Bold)
-            LazyRow(state = state, modifier = Modifier
-                .fillMaxSize()
-                .padding(2.dp, 35.dp, 2.dp, 0.dp)) {
+            Text(text = "Radios", modifier = Modifier.align(Alignment.CenterHorizontally), fontWeight = FontWeight.Bold, fontSize = 30.sp)
+            LazyVerticalGrid(cells = GridCells.Adaptive(120.dp), contentPadding = PaddingValues(16.dp)) {
                 items(radioList) {
                     RadioView(it, model)
                 }
             }
-            Text(text = "Alben", modifier = Modifier.align(Alignment.CenterStart), fontWeight = FontWeight.Bold)
+
         }
     }
 }
@@ -53,7 +49,7 @@ fun RadioView(radio: Radio, model: FreezerModel){
                     Image(
                         bitmap = radio.loadedImage!!, contentDescription = "img",
                         modifier = Modifier
-                            .shadow(4.dp),
+                            .shadow(4.dp).align(Alignment.CenterHorizontally),
                         contentScale = ContentScale.FillWidth
                     )
 

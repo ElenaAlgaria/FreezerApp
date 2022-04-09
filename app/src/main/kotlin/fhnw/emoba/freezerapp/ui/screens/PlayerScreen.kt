@@ -20,9 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fhnw.emoba.freezerapp.model.FreezerModel
@@ -33,15 +30,29 @@ fun setupPlayer(model: FreezerModel) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier
             .fillMaxSize()) {
 
-            Text(text = trackName,  fontSize = 32.sp, modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(16.dp, 16.dp,16.dp,0.dp))
+            Column(modifier = Modifier.align(Alignment.TopCenter)) {
+                Text(
+                    text = trackName, fontSize = 32.sp, modifier = Modifier
+
+                        .padding(16.dp, 16.dp, 16.dp, 0.dp)
+                )
+
+                Text(
+                    text = artist!!.name, fontSize = 24.sp, modifier = Modifier
+
+                        .padding(16.dp, 16.dp, 16.dp, 0.dp)
+                )
+
+            }
+
+
 
             album?.loadedImage?.let {
                 Image(
                     bitmap = it, contentDescription = "img",
                     modifier = Modifier
-                        .shadow(4.dp).align(Alignment.Center),
+                        .shadow(4.dp)
+                        .align(Alignment.Center),
                     contentScale = ContentScale.FillWidth
                 )
             }
@@ -58,7 +69,7 @@ fun HandleButtons(model: FreezerModel) {
     with(model) {
         Box(modifier = Modifier.fillMaxWidth()){
         IconButton(
-            onClick = { "todo" }, modifier = Modifier.align(Alignment.CenterStart)
+            onClick = { fromStart()}, modifier = Modifier.align(Alignment.CenterStart)
         ) {
             Icon(
                 Icons.Filled.SkipPrevious, "Back", tint = Color.Black,
@@ -88,7 +99,8 @@ fun HandleButtons(model: FreezerModel) {
             IconButton(
                 onClick = { pausePlayer() },
                 modifier = Modifier
-                    .background(SolidColor(LightGray), shape = CircleShape, alpha = 0.5f).align(Alignment.Center)
+                    .background(SolidColor(LightGray), shape = CircleShape, alpha = 0.5f)
+                    .align(Alignment.Center)
                     .size(72.dp)
             ) {
                 Icon(
@@ -99,7 +111,7 @@ fun HandleButtons(model: FreezerModel) {
         }
 
         IconButton(
-            onClick = { "todo" }, modifier = Modifier.align(Alignment.CenterEnd)
+            onClick = { nextTrack() }, modifier = Modifier.align(Alignment.CenterEnd)
         ) {
             Icon(
                 Icons.Filled.SkipNext, "Next", tint = Color.Black,

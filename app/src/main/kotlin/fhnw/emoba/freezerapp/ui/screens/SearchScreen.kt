@@ -21,9 +21,11 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fhnw.emoba.freezerapp.data.Album
 import fhnw.emoba.freezerapp.data.AlbumWithArtist
 import fhnw.emoba.freezerapp.model.AvailableScreen
 import fhnw.emoba.freezerapp.model.FreezerModel
+import org.json.JSONObject
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -113,7 +115,7 @@ fun AlbumView(it: AlbumWithArtist, model: FreezerModel) {
             .padding(10.dp)
             .fillMaxWidth(),
             onClick = {
-               loadTracks(it.tracks)
+               loadTracksNoAlbum(it.tracks)
                 currentScreen = AvailableScreen.TRACK
             }) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -125,7 +127,7 @@ fun AlbumView(it: AlbumWithArtist, model: FreezerModel) {
                     Spacer(Modifier.width(20.dp))
 
                 }
-                Text(text = loadArtist(it.artist), modifier = Modifier
+                Text(text = loadArtist(it.artist as JSONObject), modifier = Modifier
                     .padding(10.dp)
                     .align(
                         Alignment.Start
