@@ -26,14 +26,15 @@ class TrackTest {
 
 
         //when
-        val artist = Track(json)
+        val track = Track(json)
 
         //then
-        with(artist) {
-            Assert.assertEquals("{\"id\":\"302127\",\"title\":\"Discovery\"}", album)
-            Assert.assertEquals("happy", title)
+        with(track) {
+            Assert.assertSame(2, album.length())
+            Assert.assertEquals("Happy", title)
             Assert.assertEquals("play", preview)
-            Assert.assertEquals("{\"id\": \"27\", \"name\": \"Daft Punk\"}" , artist)
+            Assert.assertEquals(2 , artist.length())
+
 
 
         }

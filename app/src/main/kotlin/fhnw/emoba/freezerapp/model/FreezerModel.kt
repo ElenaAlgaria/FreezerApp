@@ -3,6 +3,7 @@ package fhnw.emoba.freezerapp.model
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import fhnw.emoba.freezerapp.data.*
@@ -10,7 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 class FreezerModel(val ser: DeezerService) {
     private val modelScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -28,12 +28,11 @@ class FreezerModel(val ser: DeezerService) {
     var isLoading by mutableStateOf(false)
     var radioList: List<Radio> by mutableStateOf(emptyList())
     var trackList: List<Track> by mutableStateOf(emptyList())
-    var trackAlbumList: List<TracksNoAlbum> by mutableStateOf(emptyList())
 
-    var tracksFavorites = mutableListOf<Track>()
+    var tracksFavorites = mutableStateListOf<Track>()
 
     var resultTrackList: List<Track> by mutableStateOf(emptyList())
-    var resultAlbumList: List<AlbumWithArtist> by mutableStateOf(emptyList())
+    var resultAlbumList: List<Album> by mutableStateOf(emptyList())
 
     var rememberTrack by mutableStateOf(true)
     var rememberAlbum by mutableStateOf(false)
@@ -58,7 +57,6 @@ class FreezerModel(val ser: DeezerService) {
                 resultTrackList = results
             }
             if (rememberAlbum) {
-
                 val results = ser.requestSearchAlbum(searchWord)
                 resultAlbumList = results
             }
@@ -69,7 +67,7 @@ class FreezerModel(val ser: DeezerService) {
         isLoading = true
         radioList = emptyList()
         modelScope.launch {
-            val resultList = ser.requestDeezerRadio()
+            val resultList = ser.requestRadio()
             radioList = resultList
 
             for (i in 0 until radioList.size) {
@@ -77,63 +75,55 @@ class FreezerModel(val ser: DeezerService) {
                 val image = ser.getImageFromRadio(radio.pic)
                 radio.loadedImage = image
             }
-
             isLoading = false
         }
     }
 
-    fun loadTracks(tracks: String) {
+    fun loadTracks(radio: Radio) {
         modelScope.launch {
-            val tracksResult = ser.getTracks(tracks)
+            val tracksResult = ser.getTracks(radio)
             trackList = tracksResult
 
-           for (i in 0 until trackList.size){
-               loadAlbumCover(trackList.get(i).album as JSONObject)
-           }
+            for (i in 0 until trackList.size) {
+                loadAlbumCover(trackList.get(i).album)
+            }
         }
     }
 
-    fun loadTracksNoAlbum(tracks: String) {
+    fun loadTracks(album: Album) {
         modelScope.launch {
-            val tracksResult = ser.getTracksWithoutAlbum(tracks)
-            trackAlbumList = tracksResult
+            val tracksResult = ser.getTracks(album)
+            trackList = tracksResult
 
+            loadAlbumCover(album)
         }
     }
 
-    fun loadAlbumCover(albumObject: JSONObject) {
+    fun loadAlbumCover(alb: Album) {
         modelScope.launch {
-            val alb = Album(albumObject)
             album = alb
-            val image = ser.getAlbumCover(album!!.cover)
-            album!!.loadedImage = image
+            val image = ser.getAlbumCover(alb.cover)
+            alb.loadedImage = image
         }
     }
 
-    fun loadArtist(artistObject: JSONObject): String {
-        val art = Artist(artistObject)
-        artist = art
-        return artist!!.name
+    fun getArtistName(artist: Artist): String {
+        this.artist = artist
+        return artist.name
     }
 
     fun setTrack(
         index: Int,
         preview: String,
         trackName: String,
-        artistObject: JSONObject
+        album: Album,
+        artist: Artist
     ) {
         this.preview = preview
         this.trackName = trackName
         this.index = index
-        loadArtist(artistObject)
-        startPlayer()
-    }
-
-    fun setAlbumTrack(index: Int, preview: String, trackName: String, artistObject: JSONObject) {
-        this.preview = preview
-        this.trackName = trackName
-        this.index = index
-        loadArtist(artistObject)
+        loadAlbumCover(album)
+        getArtistName(artist)
         startPlayer()
     }
 
@@ -183,8 +173,7 @@ class FreezerModel(val ser: DeezerService) {
     fun nextTrack() {
         player.pause()
         var next = trackList.get(++index)
-        setTrack(index, next.preview, next.title,next.artist)
-        startPlayer()
+        setTrack(index, next.preview, next.title, next.album, next.artist)
         currentScreen = AvailableScreen.PLAYER
     }
 

@@ -20,13 +20,11 @@ val DEFAULT_ICON = Bitmap.createBitmap(
     Bitmap.Config.ALPHA_8
 ).asImageBitmap()
 
-class DeezerService(activity: ComponentActivity) {
+class DeezerService() {
     val baseURL = "https://api.deezer.com"
     val allRadios = mutableListOf<Radio>()
-    val context = activity
     val allTracks = mutableListOf<Track>()
-    val allAlben = mutableListOf<AlbumWithArtist>()
-
+    val allAlben = mutableListOf<Album>()
 
 
     fun getData(url: URL): JSONArray {
@@ -44,8 +42,6 @@ class DeezerService(activity: ComponentActivity) {
     }
 
     fun getAlbumCover(url: String): ImageBitmap {
-        try{
-
         val url = URL(url)
         val conn = url.openConnection() as HttpsURLConnection
         conn.connect()
@@ -57,9 +53,7 @@ class DeezerService(activity: ComponentActivity) {
         val bitmap = BitmapFactory.decodeByteArray(allBytes, 0, allBytes.size)
 
         return bitmap.asImageBitmap()
-        } catch (e: Exception){
-            return BitmapFactory.decodeResource(context.resources, R.drawable.deezerlogo).asImageBitmap()
-        }
+
     }
 
     fun requestSearchTrack(word: String): List<Track>{
@@ -74,20 +68,20 @@ class DeezerService(activity: ComponentActivity) {
         return allTracks
     }
 
-    fun requestSearchAlbum(word: String): List<AlbumWithArtist>{
+    fun requestSearchAlbum(word: String): List<Album>{
         val url = URL("$baseURL/search/album?q=$word")
         var data = getData(url)
 
         for (i in 0 until data.length()){
             val json = data.get(i)
-            allAlben.add(AlbumWithArtist(json as JSONObject))
+            allAlben.add(Album(json as JSONObject))
         }
         return allAlben
     }
 
 
 
-    fun requestDeezerRadio(): List<Radio> {
+    fun requestRadio(): List<Radio> {
         val url = URL("$baseURL/radio/lists")
         var data = getData(url)
 
@@ -98,9 +92,8 @@ class DeezerService(activity: ComponentActivity) {
         return allRadios
     }
 
-
-    fun getTracks(trackList: String): List<Track> {
-        val url = URL(trackList)
+    fun getTracks(radio: Radio): List<Track> {
+        val url = URL(radio.tracks)
         var data = getData(url)
         val allTracks = mutableListOf<Track>()
 
@@ -111,6 +104,19 @@ class DeezerService(activity: ComponentActivity) {
         return allTracks
     }
 
+
+    fun getTracks(album: Album): List<Track> {
+        val url = URL(album.tracks)
+        var data = getData(url)
+        val allTracks = mutableListOf<Track>()
+
+        for (i in 0 until data.length()) {
+            val json = data.get(i)
+            allTracks.add(Track(json as JSONObject, album))
+        }
+        return allTracks
+    }
+/*
     fun getTracksWithoutAlbum(trackList: String): List<TracksNoAlbum> {
         val url = URL(trackList)
         var data = getData(url)
@@ -122,6 +128,8 @@ class DeezerService(activity: ComponentActivity) {
         }
         return allTracks
     }
+
+ */
 
     fun getImageFromRadio(url: String): ImageBitmap {
         val url = URL(url)

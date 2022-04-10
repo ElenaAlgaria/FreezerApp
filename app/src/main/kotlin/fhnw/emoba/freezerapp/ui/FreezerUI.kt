@@ -76,7 +76,7 @@ fun Body(model: FreezerModel) {
                     }
                     AvailableScreen.TRACK ->  {
                         showTracks(model = model, tracks = trackList)
-                        showAlbumTracks(tracks = trackAlbumList, model = model)
+                       // showAlbumTracks(tracks = trackAlbumList, model = model)
                     }
 
                     AvailableScreen.FAV -> {

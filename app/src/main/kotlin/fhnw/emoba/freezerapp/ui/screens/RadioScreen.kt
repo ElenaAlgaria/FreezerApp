@@ -43,7 +43,7 @@ fun SetupRadio(model: FreezerModel) {
 @Composable
 fun RadioView(radio: Radio, model: FreezerModel){
     with(model) {
-            Card(modifier = Modifier.padding(5.dp), onClick = {loadTracks(radio.tracks)
+            Card(modifier = Modifier.padding(5.dp), onClick = {loadTracks(radio)
             currentScreen = AvailableScreen.TRACK}) {
             Column() {
                     Image(

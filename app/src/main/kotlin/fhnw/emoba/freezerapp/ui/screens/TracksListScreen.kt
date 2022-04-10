@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fhnw.emoba.freezerapp.data.Track
-import fhnw.emoba.freezerapp.data.TracksNoAlbum
+//import fhnw.emoba.freezerapp.data.TracksNoAlbum
 import fhnw.emoba.freezerapp.model.AvailableScreen
 import fhnw.emoba.freezerapp.model.FreezerModel
 
@@ -32,7 +32,7 @@ fun showTracks(tracks: List<Track>, model: FreezerModel) {
         }
     }
 }
-
+/*
 @Composable
 fun showAlbumTracks(tracks: List<TracksNoAlbum>, model: FreezerModel) {
     val state = rememberLazyListState()
@@ -46,6 +46,8 @@ fun showAlbumTracks(tracks: List<TracksNoAlbum>, model: FreezerModel) {
     }
 }
 
+ */
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TrackView(it: Track, model: FreezerModel) {
@@ -54,7 +56,7 @@ fun TrackView(it: Track, model: FreezerModel) {
             .padding(10.dp)
             .fillMaxWidth(),
             onClick = {
-                setTrack(trackList.indexOf(it), it.preview, it.title, it.artist)
+                setTrack(trackList.indexOf(it), it.preview, it.title, it.album,it.artist)
                 currentScreen = AvailableScreen.PLAYER
             }) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -72,8 +74,7 @@ fun TrackView(it: Track, model: FreezerModel) {
 
                     IconButton(onClick = { switchFavorite(it) }) {
                         Icon(
-                            imageVector = if (tracksFavorites.contains(it)
-                                    .not()
+                            imageVector = if (tracksFavorites.contains(it).not()
                             ) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
                             contentDescription = "favBorder"
                         )
@@ -81,7 +82,7 @@ fun TrackView(it: Track, model: FreezerModel) {
             }
 
             Text(
-                text = loadArtist(it.artist), modifier = Modifier.padding(10.dp).align(
+                text = getArtistName(it.artist), modifier = Modifier.padding(10.dp).align(
                     Alignment.Start
                 ), fontSize = 13.sp, color = Color.DarkGray
             )
@@ -89,7 +90,7 @@ fun TrackView(it: Track, model: FreezerModel) {
     }
 }
 }
-
+/*
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TrackAlbumView(it: TracksNoAlbum, model: FreezerModel) {
@@ -133,3 +134,5 @@ fun TrackAlbumView(it: TracksNoAlbum, model: FreezerModel) {
         }
     }
 }
+
+ */

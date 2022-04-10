@@ -22,10 +22,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fhnw.emoba.freezerapp.data.Album
-import fhnw.emoba.freezerapp.data.AlbumWithArtist
+
 import fhnw.emoba.freezerapp.model.AvailableScreen
 import fhnw.emoba.freezerapp.model.FreezerModel
-import org.json.JSONObject
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -109,13 +108,13 @@ fun showResults(model: FreezerModel) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AlbumView(it: AlbumWithArtist, model: FreezerModel) {
+fun AlbumView(it: Album, model: FreezerModel) {
     with(model) {
         Card(shape = RoundedCornerShape(20.dp), elevation = 10.dp, modifier = Modifier
             .padding(10.dp)
             .fillMaxWidth(),
             onClick = {
-               loadTracksNoAlbum(it.tracks)
+               loadTracks(it)
                 currentScreen = AvailableScreen.TRACK
             }) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -127,7 +126,7 @@ fun AlbumView(it: AlbumWithArtist, model: FreezerModel) {
                     Spacer(Modifier.width(20.dp))
 
                 }
-                Text(text = loadArtist(it.artist as JSONObject), modifier = Modifier
+                Text(text = getArtistName(it.artist), modifier = Modifier
                     .padding(10.dp)
                     .align(
                         Alignment.Start
