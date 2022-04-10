@@ -32,7 +32,7 @@ fun setupPlayer(model: FreezerModel) {
 
             Column(modifier = Modifier.align(Alignment.TopCenter)) {
                 Text(
-                    text = trackName, fontSize = 32.sp, modifier = Modifier
+                    text = track!!.title, fontSize = 32.sp, modifier = Modifier
 
                         .padding(16.dp, 16.dp, 16.dp, 0.dp)
                 )

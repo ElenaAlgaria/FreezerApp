@@ -11,7 +11,8 @@ class TrackTest {
     @Before
     fun setUp() {
         jsonString = """
-            {"album": {"id": "302127", "title": "Discovery"},
+            {"album": {"id": "302127", "title": "Discovery", "cover_big": "big", "tracklist": "list"
+       },
             "title": "Happy",
             "preview": "play",
             "artist": {"id": "27", "name": "Daft Punk"},
@@ -30,11 +31,10 @@ class TrackTest {
 
         //then
         with(track) {
-            Assert.assertSame(2, album.length())
+            Assert.assertEquals("Discovery", album.title)
             Assert.assertEquals("Happy", title)
             Assert.assertEquals("play", preview)
-            Assert.assertEquals(2 , artist.length())
-
+            Assert.assertEquals("Daft Punk", artist.name)
 
 
         }

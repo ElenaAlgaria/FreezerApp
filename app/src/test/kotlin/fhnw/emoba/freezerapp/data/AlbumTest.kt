@@ -16,6 +16,7 @@ internal class AlbumTest{
             {"title": "Happier than ever",
               "cover_big": "big",
              "tracklist": "/album/list/777",
+             "artist": {"name": "hans" }
              
              }
              """
@@ -33,7 +34,8 @@ internal class AlbumTest{
         with(alb) {
             assertEquals("Happier than ever",  title)
             assertEquals("big", cover)
-            assertEquals("/album/list/777",       tracks)
+            assertEquals("/album/list/777", tracks)
+            assertEquals("hans", artist.name)
 
         }
     }

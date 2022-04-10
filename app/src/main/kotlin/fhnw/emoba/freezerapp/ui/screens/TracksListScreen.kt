@@ -56,7 +56,7 @@ fun TrackView(it: Track, model: FreezerModel) {
             .padding(10.dp)
             .fillMaxWidth(),
             onClick = {
-                setTrack(trackList.indexOf(it), it.preview, it.title, it.album,it.artist)
+                setTrack(trackList.indexOf(it), it, it.album,it.artist)
                 currentScreen = AvailableScreen.PLAYER
             }) {
             Column(modifier = Modifier.fillMaxWidth()) {

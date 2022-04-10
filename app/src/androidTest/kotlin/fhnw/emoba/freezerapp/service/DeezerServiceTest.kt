@@ -1,7 +1,8 @@
-package fhnw.emoba.freezerapp
+package fhnw.emoba.freezerapp.service
 
 import androidx.test.platform.app.InstrumentationRegistry
 import fhnw.emoba.freezerapp.data.DeezerService
+import fhnw.emoba.freezerapp.data.Radio
 import org.junit.Assert
 
 import org.junit.Test
@@ -47,20 +48,24 @@ class DeezerServiceTest {
         Assert.assertNotNull(album)
     }
 
-    @Test
-    fun getTracksWithAlbum(){
-        val service = DeezerService()
 
-        val tracks = service.getTracks("https://api.deezer.com/radio/30771/tracks")
+
+    @Test
+    fun getTracksRadio(){
+        val service = DeezerService()
+         val radioList = service.requestRadio()
+
+        val tracks = service.getTracks(radioList.get(0))
 
         Assert.assertEquals(25, tracks.size)
     }
 
     @Test
-    fun getTracksNoAlbumTest(){
+    fun getTracksAlbumTest(){
         val service = DeezerService()
+        val albumList = service.requestSearchAlbum("happier than ever")
 
-        val tracks = service.getTracks("https://api.deezer.com/album/248216622/tracks")
+        val tracks = service.getTracks(albumList.get(0))
 
         Assert.assertEquals(16, tracks.size)
     }

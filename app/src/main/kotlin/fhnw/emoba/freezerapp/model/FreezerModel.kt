@@ -16,8 +16,7 @@ class FreezerModel(val ser: DeezerService) {
     private val modelScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var currentPlaying = ""
-    private var preview = ""
-    var trackName = ""
+    var track: Track? = null
     var album: Album? = null
     var artist: Artist? = null
 
@@ -114,13 +113,11 @@ class FreezerModel(val ser: DeezerService) {
 
     fun setTrack(
         index: Int,
-        preview: String,
-        trackName: String,
+        track: Track,
         album: Album,
         artist: Artist
     ) {
-        this.preview = preview
-        this.trackName = trackName
+        this.track = track
         this.index = index
         loadAlbumCover(album)
         getArtistName(artist)
@@ -149,12 +146,11 @@ class FreezerModel(val ser: DeezerService) {
 
     fun startPlayer() {
         playerIsReady = false
-        if (currentPlaying == preview && !player.isPlaying) {
+        if (currentPlaying == track!!.preview && !player.isPlaying) {
             player.start()
         } else {
-            currentPlaying = preview
             player.reset()
-            player.setDataSource(preview)
+            player.setDataSource(track!!.preview)
             player.prepareAsync()
         }
     }
@@ -173,7 +169,7 @@ class FreezerModel(val ser: DeezerService) {
     fun nextTrack() {
         player.pause()
         var next = trackList.get(++index)
-        setTrack(index, next.preview, next.title, next.album, next.artist)
+        setTrack(index, next, next.album, next.artist)
         currentScreen = AvailableScreen.PLAYER
     }
 
