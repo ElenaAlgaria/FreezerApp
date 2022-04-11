@@ -4,6 +4,9 @@
 
 * Elena Algaria
 
+=== Anmerkung
+Die Tests im androidTest Ordner funktionieren, wenn man nur die Model tests oder die Services tests durchlaufen lässt. Wenn man über den oberen Ordner freezerapp geht und alle gleichzeitig ablaufen lässt funktioniert es nicht.
+
 === Abgabe
 
 * Klasse 6iCbb, Dienstag, 12.04.2022, 8:00 Uhr
