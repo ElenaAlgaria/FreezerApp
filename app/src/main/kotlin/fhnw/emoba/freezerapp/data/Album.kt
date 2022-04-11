@@ -12,6 +12,6 @@ class Album(json: JSONObject, artist: Artist? = null) {
     val title = json.getString("title")
     val cover = json.getString("cover_big")
     val tracks = json.getString("tracklist")
-    lateinit var loadedImage : ImageBitmap
+    var loadedImage by mutableStateOf(DEFAULT_ICON)
     var artist = if(artist != null) artist else Artist(json.getJSONObject("artist"))
 }

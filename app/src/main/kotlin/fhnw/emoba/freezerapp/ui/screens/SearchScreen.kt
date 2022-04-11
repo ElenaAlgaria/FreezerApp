@@ -62,8 +62,8 @@ fun search(model: FreezerModel) {
                         }
                         false
                     })
-            switches(model)
-            showResults(model)
+            Switches(model)
+            ShowResults(model)
         }
     }
 }
@@ -71,7 +71,7 @@ fun search(model: FreezerModel) {
 
 
 @Composable
-fun switches(model: FreezerModel) {
+fun Switches(model: FreezerModel) {
     with(model) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly) {
 
@@ -86,7 +86,7 @@ fun switches(model: FreezerModel) {
 }
 
 @Composable
-fun showResults(model: FreezerModel) {
+fun ShowResults(model: FreezerModel) {
     val state = rememberLazyListState()
     with(model) {
         if (rememberTrack){

@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import fhnw.emoba.freezerapp.model.FreezerModel
 
 @Composable
-fun setupPlayer(model: FreezerModel) {
+fun SetupPlayer(model: FreezerModel) {
     with(model) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier
             .fillMaxSize()) {
@@ -110,8 +110,7 @@ fun HandleButtons(model: FreezerModel) {
         }
 
         IconButton(
-            onClick = { nextTrack() }, modifier = Modifier.align(Alignment.CenterEnd)
-        ) {
+            onClick = { nextTrack() }, modifier = Modifier.align(Alignment.CenterEnd)) {
             Icon(
                 Icons.Filled.SkipNext, "Next", tint = Color.Black,
                 modifier = Modifier.size(48.dp)

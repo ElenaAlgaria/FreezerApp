@@ -12,7 +12,6 @@ class ModelTest {
         var service = DeezerService()
         val model = FreezerModel(service)
         model.launchSearch()
-       // Thread.sleep(100)
 
         Assert.assertNotNull(model.resultTrackList)
         Assert.assertEquals(0, model.resultAlbumList.size)
@@ -26,7 +25,6 @@ class ModelTest {
         model.rememberTrack = false
 
         model.launchSearch()
-        //Thread.sleep(100)
 
         Assert.assertNotNull(model.resultAlbumList)
         Assert.assertEquals(0, model.resultTrackList.size)

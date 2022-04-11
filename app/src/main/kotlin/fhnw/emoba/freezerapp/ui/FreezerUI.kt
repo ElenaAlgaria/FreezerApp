@@ -69,7 +69,7 @@ fun Body(model: FreezerModel) {
                         search(model = model)
                     }
                     AvailableScreen.PLAYER -> {
-                        setupPlayer(model = model)
+                        SetupPlayer(model = model)
                     }
                     AvailableScreen.EXPLORE -> {
                         SetupRadio(model = model)
@@ -80,7 +80,7 @@ fun Body(model: FreezerModel) {
                     }
 
                     AvailableScreen.FAV -> {
-                        showFavorites(model = model)
+                        ShowFavorites(model = model)
                     }
                 }
             }

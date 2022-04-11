@@ -5,6 +5,6 @@ enum class AvailableScreen(val title: String) {
     SEARCH("Search"),
     PLAYER("Player"),
     FAV("Favorites"),
-    TRACK(""),
+    TRACK("")
 
 }

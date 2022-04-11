@@ -37,15 +37,15 @@ class FreezerModel(val ser: DeezerService) {
 
     var index by mutableStateOf(0)
 
+
     fun toggleTrack() {
         rememberTrack = !rememberTrack
-        rememberAlbum = true
+        rememberAlbum = !rememberAlbum
     }
 
     fun toggleAlbum() {
         rememberAlbum = !rememberAlbum
-        rememberTrack = true
-
+        rememberTrack = !rememberTrack
     }
 
     fun launchSearch() {
@@ -160,10 +160,12 @@ class FreezerModel(val ser: DeezerService) {
 
     fun nextTrack() {
         player.pause()
-        val next = trackList.get(++index)
-        setTrack(index, next, next.album)
-       // currentScreen = AvailableScreen.PLAYER
+        if (!trackList.isNullOrEmpty()){
+            val next = trackList.get(++index)
+            setTrack(index, next, next.album)
+        } else {
+            fromStart()
+        }
     }
-
 }
 

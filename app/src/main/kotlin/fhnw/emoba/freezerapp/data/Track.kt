@@ -10,13 +10,5 @@ class Track(json: JSONObject, album: Album? = null) {
     val preview = json.getString("preview")
 
 }
-/*
-class TracksNoAlbum(json: JSONObject) {
-    val title = json.getString("title")
-    val preview = json.getString("preview")
-    val artist = json.getJSONObject("artist")
 
-}
-
- */
 

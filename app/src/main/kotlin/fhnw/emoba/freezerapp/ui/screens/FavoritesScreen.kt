@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import fhnw.emoba.freezerapp.model.FreezerModel
 
 @Composable
-fun showFavorites(model: FreezerModel) {
+fun ShowFavorites(model: FreezerModel) {
     val state = rememberLazyListState()
 
     with(model) {

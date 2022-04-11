@@ -13,7 +13,6 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import javax.net.ssl.HttpsURLConnection
-
 val DEFAULT_ICON = Bitmap.createBitmap(
     120,
     120,
@@ -116,20 +115,6 @@ class DeezerService() {
         }
         return allTracks
     }
-/*
-    fun getTracksWithoutAlbum(trackList: String): List<TracksNoAlbum> {
-        val url = URL(trackList)
-        var data = getData(url)
-        val allTracks = mutableListOf<TracksNoAlbum>()
-
-        for (i in 0 until data.length()) {
-            val json = data.get(i)
-            allTracks.add(TracksNoAlbum(json as JSONObject))
-        }
-        return allTracks
-    }
-
- */
 
     fun getImageFromRadio(url: String): ImageBitmap {
         val url = URL(url)

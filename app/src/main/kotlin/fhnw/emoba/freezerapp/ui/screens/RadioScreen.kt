@@ -19,8 +19,6 @@ import fhnw.emoba.freezerapp.model.AvailableScreen
 @OptIn(ExperimentalMaterialApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun SetupRadio(model: FreezerModel) {
-    val state = rememberLazyListState()
-
     with(model) {
         Column(
             modifier = Modifier
@@ -47,7 +45,7 @@ fun RadioView(radio: Radio, model: FreezerModel){
             currentScreen = AvailableScreen.TRACK}) {
             Column() {
                     Image(
-                        bitmap = radio.loadedImage!!, contentDescription = "img",
+                        bitmap = radio.loadedImage, contentDescription = "img",
                         modifier = Modifier
                             .shadow(4.dp).align(Alignment.CenterHorizontally),
                         contentScale = ContentScale.FillWidth
