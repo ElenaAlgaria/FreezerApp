@@ -6,13 +6,13 @@ import org.junit.Assert
 import org.junit.Test
 
 class ModelTest {
-    var service = DeezerService()
 
     @Test
     fun launchSearchTest(){
+        var service = DeezerService()
         val model = FreezerModel(service)
         model.launchSearch()
-        Thread.sleep(100)
+       // Thread.sleep(100)
 
         Assert.assertNotNull(model.resultTrackList)
         Assert.assertEquals(0, model.resultAlbumList.size)
@@ -20,14 +20,17 @@ class ModelTest {
 
     @Test
     fun launchSearchAlbumTest(){
+        var service = DeezerService()
         val model = FreezerModel(service)
         model.rememberAlbum = true
         model.rememberTrack = false
 
         model.launchSearch()
-        Thread.sleep(100)
+        //Thread.sleep(100)
 
         Assert.assertNotNull(model.resultAlbumList)
         Assert.assertEquals(0, model.resultTrackList.size)
     }
+
+
 }

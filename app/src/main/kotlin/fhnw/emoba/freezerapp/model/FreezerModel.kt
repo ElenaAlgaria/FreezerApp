@@ -16,9 +16,8 @@ class FreezerModel(val ser: DeezerService) {
     private val modelScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var currentPlaying = ""
-    var track: Track? = null
-    var album: Album? = null
-    var artist: Artist? = null
+    var track by mutableStateOf<Track?>(null)
+    var album by mutableStateOf<Album?>(null)
 
     var currentScreen by mutableStateOf(AvailableScreen.EXPLORE)
     var searchWord by mutableStateOf("")
@@ -36,7 +35,7 @@ class FreezerModel(val ser: DeezerService) {
     var rememberTrack by mutableStateOf(true)
     var rememberAlbum by mutableStateOf(false)
 
-    var index = 0
+    var index by mutableStateOf(0)
 
     fun toggleTrack() {
         rememberTrack = !rememberTrack
@@ -106,21 +105,14 @@ class FreezerModel(val ser: DeezerService) {
         }
     }
 
-    fun getArtistName(artist: Artist): String {
-        this.artist = artist
-        return artist.name
-    }
-
     fun setTrack(
         index: Int,
         track: Track,
-        album: Album,
-        artist: Artist
+        album: Album
     ) {
         this.track = track
         this.index = index
         loadAlbumCover(album)
-        getArtistName(artist)
         startPlayer()
     }
 
@@ -168,9 +160,9 @@ class FreezerModel(val ser: DeezerService) {
 
     fun nextTrack() {
         player.pause()
-        var next = trackList.get(++index)
-        setTrack(index, next, next.album, next.artist)
-        currentScreen = AvailableScreen.PLAYER
+        val next = trackList.get(++index)
+        setTrack(index, next, next.album)
+       // currentScreen = AvailableScreen.PLAYER
     }
 
 }

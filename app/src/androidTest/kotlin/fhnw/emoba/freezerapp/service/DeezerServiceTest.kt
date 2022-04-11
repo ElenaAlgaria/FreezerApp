@@ -3,6 +3,7 @@ package fhnw.emoba.freezerapp.service
 import androidx.test.platform.app.InstrumentationRegistry
 import fhnw.emoba.freezerapp.data.DeezerService
 import fhnw.emoba.freezerapp.data.Radio
+import fhnw.emoba.freezerapp.model.FreezerModel
 import org.junit.Assert
 
 import org.junit.Test
@@ -47,7 +48,6 @@ class DeezerServiceTest {
 
         Assert.assertNotNull(album)
     }
-
 
 
     @Test

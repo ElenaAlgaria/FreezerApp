@@ -38,13 +38,12 @@ fun setupPlayer(model: FreezerModel) {
                 )
 
                 Text(
-                    text = artist!!.name, fontSize = 24.sp, modifier = Modifier
+                    text = track!!.artist.name, fontSize = 24.sp, modifier = Modifier
 
                         .padding(16.dp, 16.dp, 16.dp, 0.dp)
                 )
 
             }
-
 
 
             album?.loadedImage?.let {

@@ -126,7 +126,7 @@ fun AlbumView(it: Album, model: FreezerModel) {
                     Spacer(Modifier.width(20.dp))
 
                 }
-                Text(text = getArtistName(it.artist), modifier = Modifier
+                Text(text = it.artist.name, modifier = Modifier
                     .padding(10.dp)
                     .align(
                         Alignment.Start

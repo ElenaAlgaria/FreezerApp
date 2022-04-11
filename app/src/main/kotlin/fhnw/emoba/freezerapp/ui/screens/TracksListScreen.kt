@@ -32,21 +32,6 @@ fun showTracks(tracks: List<Track>, model: FreezerModel) {
         }
     }
 }
-/*
-@Composable
-fun showAlbumTracks(tracks: List<TracksNoAlbum>, model: FreezerModel) {
-    val state = rememberLazyListState()
-
-    with(model) {
-        LazyColumn(state = state, modifier = Modifier.fillMaxWidth()) {
-            items(tracks) {
-                TrackAlbumView(it, model)
-            }
-        }
-    }
-}
-
- */
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -56,7 +41,7 @@ fun TrackView(it: Track, model: FreezerModel) {
             .padding(10.dp)
             .fillMaxWidth(),
             onClick = {
-                setTrack(trackList.indexOf(it), it, it.album,it.artist)
+                setTrack(trackList.indexOf(it), it, it.album)
                 currentScreen = AvailableScreen.PLAYER
             }) {
             Column(modifier = Modifier.fillMaxWidth()) {
@@ -82,7 +67,7 @@ fun TrackView(it: Track, model: FreezerModel) {
             }
 
             Text(
-                text = getArtistName(it.artist), modifier = Modifier.padding(10.dp).align(
+                text = it.artist.name, modifier = Modifier.padding(10.dp).align(
                     Alignment.Start
                 ), fontSize = 13.sp, color = Color.DarkGray
             )
@@ -90,49 +75,3 @@ fun TrackView(it: Track, model: FreezerModel) {
     }
 }
 }
-/*
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun TrackAlbumView(it: TracksNoAlbum, model: FreezerModel) {
-    with(model) {
-        Card(shape = RoundedCornerShape(20.dp), elevation = 10.dp, modifier = Modifier
-            .padding(10.dp)
-            .fillMaxWidth(),
-            onClick = {
-                setTrack(trackAlbumList.indexOf(it), it.preview, it.title, it.artist)
-                currentScreen = AvailableScreen.PLAYER
-            }) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = it.title, modifier = Modifier
-                            .padding(10.dp)
-                            .align(Alignment.CenterVertically), fontSize = 14.sp
-                    )
-                    Spacer(Modifier.width(20.dp))
-
-                  /*  IconButton(onClick = { switchFavorite(it) }) {
-                        Icon(
-                            imageVector = if (tracksFavorites.contains(it)
-                                    .not()
-                            ) Icons.Filled.FavoriteBorder else Icons.Filled.Favorite,
-                            contentDescription = "favBorder"
-                        )
-                    }*/
-                }
-
-                Text(
-                    text = loadArtist(it.artist), modifier = Modifier.padding(10.dp).align(
-                        Alignment.Start
-                    ), fontSize = 13.sp, color = Color.DarkGray
-                )
-            }
-        }
-    }
-}
-
- */
